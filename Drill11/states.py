@@ -5,7 +5,7 @@ Boy 는 활성 상태 객체(self.state_obj)에 작업을 위임하고,
 상태 전환은 Boy.change_state() 로만 수행한다.
 """
 
-from pico2d import SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE
+from pico2d import SDLK_a, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE
 
 
 class BoyState:
@@ -61,6 +61,8 @@ class IdleState(BoyState):
         elif key == SDLK_RIGHT:
             boy.face_dir = 1
             boy.change_state(RunState)
+        elif key == SDLK_a:
+            boy.change_state(AutoRunState)
         else:
             # IDLE 에서는 어떤 키 입력이든 "입력이 있었다"로 보고 타이머를 초기화
             boy.idle_time = 0.0
@@ -118,3 +120,38 @@ class RunState(BoyState):
         else:
             # 방향키를 모두 놓으면 IDLE 로 (5초 타이머는 enter 에서 재시작)
             boy.change_state(IdleState)
+
+
+class AutoRunState(BoyState):
+    """'a' 키로 진입하는 자동 무적 런 상태.
+
+    입력 없이도 계속 달리고, 일정 시간이 지나면 IDLE 로 돌아간다.
+    """
+
+    name = 'AUTORUN'
+    animation_name = 'RUN'
+    is_invincible = True
+
+    SPEED = 400         # 자동 이동 속도 (픽셀/초) - RUN(250)보다 빠르다
+    DURATION = 5.0      # 자동 런 유지 시간 (초)
+
+    def enter(self, boy):
+        super().enter(boy)
+        self.elapsed = 0.0
+        self.direction = boy.face_dir
+
+    def update(self, boy, dt):
+        self.elapsed += dt
+        if self.elapsed >= AutoRunState.DURATION:
+            boy.change_state(IdleState)
+            return
+
+        boy.x += self.direction * AutoRunState.SPEED * dt
+        boy.clamp_to_screen()
+        boy.face_dir = self.direction
+        boy.advance_animation(dt)
+
+    def handle_keydown(self, boy, key):
+        # 자동 런 중 'a' 재입력은 무시한다 (타이머를 다시 시작하지 않는다)
+        pass
+
