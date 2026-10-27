@@ -234,7 +234,9 @@ states.py
 | `states.py` | **신규.** `BoyState` + 4개 상태 클래스 (`AutoRunState` 포함) |
 | `boy.py` | 상태 머신 위임 구조로 정리, AutoRun 전용 분기 제거 |
 | `main.py` | 변경 없음(이벤트/업데이트 위임 유지) |
+| `test_states.py` | **신규.** 수용 기준 자동 테스트(pico2d 스텁 사용) |
 | `docs/state_diagram.png` | **신규.** 상태 다이어그램 이미지 |
+| `docs/make_state_diagram.py` | **신규.** 다이어그램 생성 스크립트 |
 | `PRD.md` | **신규.** 본 문서 |
 
 ### 6.4 입력 처리 흐름
@@ -246,12 +248,12 @@ main.handle_events()
        └─ KEYUP    → state_obj.handle_keyup(boy, key)
 
 IdleState.handle_keydown:
-  ←/→  → boy.change_state(RunState, face_dir=±1)
+  ←/→  → boy.face_dir = ±1; boy.change_state(RunState)
   a    → boy.change_state(AutoRunState)
   기타 → idle_time = 0
 
 AutoRunState.handle_keydown:
-  ←/→  → boy.change_state(RunState, face_dir=±1)   # 자동 런 취소
+  ←/→  → boy.face_dir = ±1; boy.change_state(RunState)   # 자동 런 취소
   a    → 무시
 ```
 
@@ -281,7 +283,7 @@ AutoRunState.handle_keydown:
 | T1 | `IDLE`에서 `a` 키다운 | `AUTORUN` 진입, 입력 없이 이동, 무적 플래그 ON |
 | T2 | `AUTORUN` 진입 후 5초 대기 | 5.0초 시점에 `IDLE` 복귀, 이후 5초 뒤 `SLEEP` |
 | T3 | `AUTORUN`과 `RUN`의 이동량/표시 크기 비교 | 400px/s vs 250px/s, 1.3배 vs 1.0배 |
-| T4 | 오른쪽 끝까지 이동 후 계속 관찰 | 경계에서 `face_dir` 반전, `x`가 `[50, W−50]` 유지 |
+| T4 | 오른쪽 끝까지 이동 후 계속 관찰 | 경계에서 `face_dir` 반전, `x`가 `[65, W−65]` 유지 |
 | T5 | `AUTORUN` 중 `←` 키다운 | 즉시 `RUN`, `face_dir == -1`, 타이머 폐기 |
 | T6 | `AUTORUN` 중 `→` 키다운 | 즉시 `RUN`, `face_dir == 1` |
 | T7 | `AUTORUN` 중 `a` 재입력 | 상태·타이머 변화 없음 |
@@ -289,6 +291,8 @@ AutoRunState.handle_keydown:
 | T9 | 4.9초에 `←` 키다운 | `RUN` 전환, 5초가 지나도 `IDLE`로 자동 복귀하지 않음 |
 | T10 | 기존 기능 회귀 | `IDLE→SLEEP`(5초), `Space` 기상, `RUN` 진입/해제 정상 |
 | T11 | 창을 드래그해 프레임이 밀린 뒤 복귀 | 캐릭터가 화면 밖으로 튀지 않음(`dt` 상한 유지) |
+
+자동 테스트: `python test_states.py` (T1~T10 로직을 창 없이 검증, 10개 테스트)
 
 ---
 
@@ -300,18 +304,18 @@ AutoRunState.handle_keydown:
    - 본 문서, 요구사항/전이표/수용 기준
 2. `refactor: 소년 상태를 상태 클래스 구조로 분리`
    - `states.py` 도입, `IdleState`/`SleepState`/`RunState` 이관, 기존 동작 유지
-3. `feat: AutoRunState 추가 및 'a' 키 전이 구현`
-   - `IDLE → AUTORUN`, 진입 초기화, 무적 플래그
-4. `feat: AutoRun 자동 이동·속도·크기 확대 구현`
-   - 400px/s, 1.3배(발 기준), RUN 애니메이션 재사용
+3. `feat: AutoRunState 추가 및 'a' 자동 무적 런 진입`
+   - `IDLE → AUTORUN`, 자동 이동(400px/s), 5초 만료, 무적 플래그
+4. `feat: AutoRun 1.3배 확대 적용 (발 기준)`
+   - `AUTORUN_SCALE`, 발 기준 좌표 보정, RUN 애니메이션 재사용
 5. `feat: AutoRun 좌우 경계 자동 방향 전환`
-   - 클램프 + `face_dir` 반전
-6. `feat: AutoRun 5초 만료 및 방향키 취소 처리`
-   - `AUTORUN → IDLE`, `AUTORUN → RUN`, 타이머 폐기
+   - 확대 크기를 고려한 경계(65px) + `face_dir` 반전
+6. `feat: AutoRun 중 방향키 입력 시 Run 상태로 취소`
+   - `AUTORUN → RUN`, 눌린 방향 적용, 타이머 폐기
 7. `docs: 상태 다이어그램 이미지 추가`
-   - `docs/state_diagram.png`, PRD 링크 갱신
-8. `test: 수용 기준 시나리오 점검 및 밸런스 조정`
-   - T1~T11 수동 검증 결과 기록, 필요 시 상수 미세 조정
+   - `docs/state_diagram.png`, 생성 스크립트, PRD 링크 갱신
+8. `test: 수용 기준 자동 테스트 추가`
+   - `test_states.py` (T1~T10), 실행 결과 기록
 
 각 커밋은 실행 가능한 상태(게임이 정상 구동되는 상태)를 유지한다.
 
