@@ -160,8 +160,14 @@ class AutoRunState(BoyState):
         boy.advance_animation(dt)
 
     def handle_keydown(self, boy, key):
+        if key == SDLK_LEFT:
+            # 방향키 입력 시 자동 런을 취소하고 눌린 방향의 RUN 으로 전환
+            boy.face_dir = -1
+            boy.change_state(RunState)
+        elif key == SDLK_RIGHT:
+            boy.face_dir = 1
+            boy.change_state(RunState)
         # 자동 런 중 'a' 재입력은 무시한다 (타이머를 다시 시작하지 않는다)
-        pass
 
     def draw(self, boy):
         right_row, left_row = boy.ANIMATION_ROWS[self.animation_name]
