@@ -143,7 +143,7 @@
 
 ### 5.3 상태 다이어그램
 
-제출용 이미지: **`docs/state_diagram.png`** (저장소에 포함, 아래 Mermaid 원본과 동일 내용)
+제출용 이미지: **`boy_state_diagram.png`** (프로젝트 루트, `docs/state_diagram.png`와 동일 내용)
 생성 스크립트: `docs/make_state_diagram.py` (Pillow, `python docs/make_state_diagram.py`)
 
 ```mermaid
@@ -236,6 +236,7 @@ states.py
 | `main.py` | 변경 없음(이벤트/업데이트 위임 유지) |
 | `test_states.py` | **신규.** 수용 기준 자동 테스트(pico2d 스텁 사용) |
 | `docs/state_diagram.png` | **신규.** 상태 다이어그램 이미지 |
+| `boy_state_diagram.png` | **신규.** 제출용 상태 다이어그램 이미지(프로젝트 루트) |
 | `docs/make_state_diagram.py` | **신규.** 다이어그램 생성 스크립트 |
 | `PRD.md` | **신규.** 본 문서 |
 
@@ -344,7 +345,7 @@ AutoRunState.handle_keydown:
 - [x] 진입 5초 후 `IDLE`로 복귀한다.
 - [x] `AUTORUN` 중 방향키 입력 시 눌린 방향의 `RUN`으로 전환된다.
 - [x] `AutoRunState` 클래스가 존재하고 AutoRun 로직을 담당한다.
-- [x] `docs/state_diagram.png`가 저장소에 포함되어 있다.
+- [x] `docs/state_diagram.png`와 `boy_state_diagram.png`가 저장소에 포함되어 있다.
 - [x] `PRD.md`가 저장소에 포함되어 있다.
 - [x] 기존 `IDLE`/`SLEEP`/`RUN` 기능이 회귀 없이 동작한다.
 - [x] 기능 단위 커밋 기록이 남아 있다.

@@ -1,7 +1,8 @@
 """Drill #11 상태 다이어그램 생성 스크립트.
 
-`python docs/make_state_diagram.py` 로 실행하면 같은 폴더에
-`state_diagram.png` 가 생성된다. (Pillow 필요)
+`python docs/make_state_diagram.py` 로 실행하면
+`docs/state_diagram.png` 와 프로젝트 루트의 `boy_state_diagram.png` 가 생성된다.
+(Pillow 필요)
 """
 
 import math
@@ -140,6 +141,11 @@ def main():
         draw.text((845, 615 + i * 28), line, font=note_font, fill=TEXT)
 
     output = os.path.join(BASE_DIR, 'state_diagram.png')
+    image.save(output)
+    print(f'saved: {output}')
+
+    # 과제 제출용 파일명으로 프로젝트 루트에도 저장
+    output = os.path.normpath(os.path.join(BASE_DIR, '..', 'boy_state_diagram.png'))
     image.save(output)
     print(f'saved: {output}')
 
