@@ -133,6 +133,7 @@ class AutoRunState(BoyState):
     is_invincible = True
 
     SPEED = 400         # 자동 이동 속도 (픽셀/초) - RUN(250)보다 빠르다
+    SCALE = 1.3         # 표시 크기 배율 - RUN(1.0)보다 크다
     DURATION = 5.0      # 자동 런 유지 시간 (초)
 
     def enter(self, boy):
@@ -154,4 +155,13 @@ class AutoRunState(BoyState):
     def handle_keydown(self, boy, key):
         # 자동 런 중 'a' 재입력은 무시한다 (타이머를 다시 시작하지 않는다)
         pass
+
+    def draw(self, boy):
+        right_row, left_row = boy.ANIMATION_ROWS[self.animation_name]
+        row = right_row if boy.face_dir == 1 else left_row
+        size = 100 * AutoRunState.SCALE
+        # 발 위치가 잔디에서 뜨지 않도록 확대분의 절반만큼 위로 올려 그린다.
+        draw_y = boy.y + 50 * (AutoRunState.SCALE - 1)
+        boy.image.clip_draw(boy.frame * 100, row, 100, 100,
+                            boy.x, draw_y, size, size)
 
