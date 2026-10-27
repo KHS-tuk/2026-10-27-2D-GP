@@ -294,6 +294,8 @@ AutoRunState.handle_keydown:
 
 자동 테스트: `python test_states.py` (T1~T10 로직을 창 없이 검증, 10개 테스트)
 
+검증 결과 (2026-10-27): `python test_states.py` → **10개 테스트 모두 통과**, `python main.py` → 4초 구동 동안 예외 없음.
+
 ---
 
 ## 8. 구현 계획 및 커밋 전략
@@ -336,13 +338,13 @@ AutoRunState.handle_keydown:
 
 ## 10. 완료 정의 (Definition of Done)
 
-- [ ] `IDLE`에서 `a`를 누르면 `AUTORUN`으로 진입한다.
-- [ ] `AUTORUN`에서 키 입력 없이 좌우 이동하고, 좌우 끝에서 자동 반전한다.
-- [ ] `AUTORUN`의 속도(400px/s)와 크기(1.3배)가 `RUN`보다 크다.
-- [ ] 진입 5초 후 `IDLE`로 복귀한다.
-- [ ] `AUTORUN` 중 방향키 입력 시 눌린 방향의 `RUN`으로 전환된다.
-- [ ] `AutoRunState` 클래스가 존재하고 AutoRun 로직을 담당한다.
-- [ ] `docs/state_diagram.png`가 저장소에 포함되어 있다.
-- [ ] `PRD.md`가 저장소에 포함되어 있다.
-- [ ] 기존 `IDLE`/`SLEEP`/`RUN` 기능이 회귀 없이 동작한다.
-- [ ] 기능 단위 커밋 기록이 남아 있다.
+- [x] `IDLE`에서 `a`를 누르면 `AUTORUN`으로 진입한다.
+- [x] `AUTORUN`에서 키 입력 없이 좌우 이동하고, 좌우 끝에서 자동 반전한다.
+- [x] `AUTORUN`의 속도(400px/s)와 크기(1.3배)가 `RUN`보다 크다.
+- [x] 진입 5초 후 `IDLE`로 복귀한다.
+- [x] `AUTORUN` 중 방향키 입력 시 눌린 방향의 `RUN`으로 전환된다.
+- [x] `AutoRunState` 클래스가 존재하고 AutoRun 로직을 담당한다.
+- [x] `docs/state_diagram.png`가 저장소에 포함되어 있다.
+- [x] `PRD.md`가 저장소에 포함되어 있다.
+- [x] 기존 `IDLE`/`SLEEP`/`RUN` 기능이 회귀 없이 동작한다.
+- [x] 기능 단위 커밋 기록이 남아 있다.
