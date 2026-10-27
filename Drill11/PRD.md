@@ -144,6 +144,7 @@
 ### 5.3 상태 다이어그램
 
 제출용 이미지: **`docs/state_diagram.png`** (저장소에 포함, 아래 Mermaid 원본과 동일 내용)
+생성 스크립트: `docs/make_state_diagram.py` (Pillow, `python docs/make_state_diagram.py`)
 
 ```mermaid
 stateDiagram-v2
