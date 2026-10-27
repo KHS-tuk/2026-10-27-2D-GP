@@ -82,7 +82,8 @@
 ### FR-4. 좌우 끝 자동 방향 전환
 
 - `x`가 화면 좌/우 경계에 닿으면 `face_dir`을 반전한다.
-- 경계는 확대된 표시 크기를 고려해 `SCREEN_MARGIN`(50px)으로 클램프한다.
+- 경계는 확대된 표시 크기를 고려해 **`AUTORUN_MARGIN = 50 × 1.3 = 65px`**로 클램프한다.
+  (`SCREEN_MARGIN` 50px보다 크므로 확대된 스프라이트가 화면 밖으로 잘리지 않는다.)
 - 한 프레임 안에서 경계를 넘어가도 화면 밖으로 나가지 않아야 하며, 반전은 1회만 적용한다.
 - 반전 후 다음 프레임부터 반대 방향으로 이동하고, 좌/우 애니메이션 행도 함께 바뀐다.
 
@@ -221,6 +222,7 @@ states.py
 | `AUTORUN_SPEED` | 400 px/s | `states.py` `AutoRunState` |
 | `AUTORUN_SCALE` | 1.3 | `states.py` `AutoRunState` |
 | `AUTORUN_DURATION` | 5.0 s | `states.py` `AutoRunState` |
+| `AUTORUN_MARGIN` | 65 px (50 × `AUTORUN_SCALE`) | `AutoRunState.update()` 계산값 |
 | `SCREEN_MARGIN` | 50 px | `boy.py` 또는 공통 상수 |
 | `FRAME_TIME` | 0.1 s | 공통 애니메이션 설정 |
 

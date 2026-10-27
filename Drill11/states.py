@@ -5,7 +5,7 @@ Boy 는 활성 상태 객체(self.state_obj)에 작업을 위임하고,
 상태 전환은 Boy.change_state() 로만 수행한다.
 """
 
-from pico2d import SDLK_a, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE
+from pico2d import SDLK_a, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, get_canvas_width
 
 
 class BoyState:
@@ -148,7 +148,14 @@ class AutoRunState(BoyState):
             return
 
         boy.x += self.direction * AutoRunState.SPEED * dt
-        boy.clamp_to_screen()
+        # 확대된 스프라이트가 화면 밖으로 잘리지 않도록 표시 절반 폭을 경계로 삼는다.
+        margin = max(boy.SCREEN_MARGIN, 50 * AutoRunState.SCALE)
+        if boy.x <= margin:
+            boy.x = margin
+            self.direction = 1
+        elif boy.x >= get_canvas_width() - margin:
+            boy.x = get_canvas_width() - margin
+            self.direction = -1
         boy.face_dir = self.direction
         boy.advance_animation(dt)
 
